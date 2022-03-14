@@ -22,8 +22,15 @@ class AppController extends Action {
 
 		$this->view->tweets = $tweets;
 
+		$usuario = Container::getModel('Usuario');
+		$usuario->__set('id', $_SESSION['id']);
+
+		$this->view->info_usuario = $usuario->getInfoUsuario();
+		$this->view->total_tweets = $usuario->getTotalTweets();
+		$this->view->total_seguindo = $usuario->getTotalSeguindo();
+		$this->view->total_seguidores = $usuario->getTotalSeguidores();
+
 		$this->render('timeline');
-		
 		
 	}
 
@@ -72,6 +79,15 @@ class AppController extends Action {
 
 		$this->view->usuarios = $usuarios;
 
+		$usuario = Container::getModel('Usuario');
+		$usuario->__set('id', $_SESSION['id']);
+
+		$this->view->info_usuario = $usuario->getInfoUsuario();
+		$this->view->total_tweet = $usuario->getTotalTweets();
+		$this->view->total_seguindo = $usuario->getTotalSeguindo();
+		$this->view->total_seguidores = $usuario->getTotalSeguidores();
+
+
 		$this->render('quemSeguir');	
 
 	}
@@ -95,6 +111,18 @@ class AppController extends Action {
 		}
 
 		header('Location: /quem_seguir');
+	}
+
+	public function apaga_tweet() {
+		
+		$this->validaAutenticacao();
+
+
+		$tweet = Container::getModel('Tweet');
+		$tweet->__set('id', $_GET['apagar']);
+		$tweet->deletaTweet($tweet->__get('id'));
+
+		header('location: /timeline');
 	}
 }
 
